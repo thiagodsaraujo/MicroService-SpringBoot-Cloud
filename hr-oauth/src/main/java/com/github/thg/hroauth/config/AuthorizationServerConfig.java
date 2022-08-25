@@ -1,6 +1,7 @@
 package com.github.thg.hroauth.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +17,13 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 @EnableAuthorizationServer
 public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter{
 
+	@Value("${oauth.client.name}")
+	private String clientName;
+	
+	@Value("${ouath.client.secret}")
+	private String clientSecret;
+	
+	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
@@ -41,8 +49,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		 *  do aplicativo(cliente) e também para configurar o tipo do grant-type
 		 */
 		clients.inMemory()
-		.withClient("myappname123")
-		.secret(passwordEncoder.encode("myappsecret123"))
+		.withClient(clientName)
+		.secret(passwordEncoder.encode(clientSecret))
 		.scopes("read", "write")
 		.authorizedGrantTypes("password")
 		.accessTokenValiditySeconds(86400);
